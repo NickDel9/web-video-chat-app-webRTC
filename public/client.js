@@ -27,9 +27,11 @@ var iceServers = {
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
-        { urls: 'stun:stun2.l.google.com:19302' },
-        { urls: 'stun:stun3.l.google.com:19302' },
-        { urls: 'stun:stun4.l.google.com:19302' },
+          {
+            url: 'turn:numb.viagenie.ca',
+            credential: 'muazkh',
+            username: 'webrtc@live.com'
+          }
       ]
 };
 
@@ -190,7 +192,7 @@ socket.on('full-room' , () => {
                    // console.log(`created datachannel for ${socketListId}`)
                     channels[socketListId] = dataChannel //store datachannel to array for future send event
 
-                    dataChannel.addEventListener('open', event => {
+                    dataChannel.addEventListener('open', () => {
                         console.log('datachannel created' +" " + dataChannel.readyState +" sid" +socketListId)
                     });
                 
@@ -230,7 +232,7 @@ socket.on('full-room' , () => {
                 }
             
              //Wait for their ice candidate       
-             connections[socketListId].onicecandidate = function(){
+             connections[socketListId].onicecandidate = function(event){
                 if(event.candidate != null) {
                     console.log('---sending ice candidate---');
                     socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate}));
@@ -240,12 +242,12 @@ socket.on('full-room' , () => {
             // if fullscreen mode is enabled add the new stream to the bottom side menu
             if (hasFullScreen){
                 console.log('fullscrenn adder' , socketListId)
-                connections[socketListId].onaddstream = function(){
+                connections[socketListId].onaddstream = function(event){
                     UpdateMediumMenuView(socketListId , event , false)
                 }    
             }
             else{
-                connections[socketListId].onaddstream = function(){
+                connections[socketListId].onaddstream = function(event){
                     setRemoteStream(event, socketListId)
                 }   
             }       
@@ -409,29 +411,28 @@ function showParticipants() {
 
     const usernames = Array.from(users.values())
     usernames.forEach(function(name){
-        participantsList.innerHTML += `<li> ${name} </li> `;
         participantsList.html(participantsList.html()+`<li> ${name} </li> `)
     })
 }
 
 function displayMessage(message) {
     message= message + "<br>"
-    document.getElementById("chat-area").innerHTML += '<div class=chatroom-user>' + '<p>'+ message + '</p></div>';
-    document.getElementById("message-input").value = ''
+    $("#chat-area").html($("#chat_area").html() + '<div class=chatroom-user>' + '<p>'+ message + '</p></div>')
+    $("#message-input").val('')
 
     for (id in channels){
         if (id != socketId && channels[id].readyState =='open')
             channels[id].send(message);
     }
 
-    document.getElementById("chat-area").scrollTo(0,  document.getElementById("chat-area").scrollHeight);
+    $("#chat_area").scrollTop($("#chat_area").prop('scrollHeight'));
 }
 
 function initRemoteMessage(id ,message){
     if (id != socketId)
-        document.getElementById("chat-area").innerHTML += '<div class=chatroom-remote>'+ '<h3>'+users.get(id)+'</h3>'+'<p>'+ message+'</p></div>';
+        $("#chat-area").html($("#hat_area").html() +'<div class=chatroom-remote>'+ '<h3>'+users.get(id)+'</h3>'+'<p>'+ message+'</p></div>')
 
-    document.getElementById("chat-area").scrollTo(0,  document.getElementById("chat-area").scrollHeight);
+    $("#chat_area").scrollTop($("#chat_area").prop('scrollHeight'));
 }
 
  function sendFile(file){
@@ -475,34 +476,34 @@ function displayFileMessage(file ,id){
     filename = nameOfFile
     var message = nameOfFile + "<br>"
     const url = window.URL.createObjectURL(file);
-    const chat_area = document.getElementById("chat-area")
+    const chat_area = $("#chat-area")
 
     if (isImage(nameOfFile)){
 
         storeImg(file , url)
 
         if(socketId == id){
-            chat_area.innerHTML += `<div class=chatroom-user>  <p>`+
-            '<img id="image-message" class='+nameOfFile+ ' src='+URL.createObjectURL(file)+' onclick="getPics(this)"></p></div>'; 
+            chat_area.html(`${chat_area.html()} <div class=chatroom-user>  <p>`+
+            '<img id="image-message" class='+nameOfFile+ ' src='+URL.createObjectURL(file)+' onclick="getPics(this)"></p></div>')
         }
         else{
-            chat_area.innerHTML += '<div class=chatroom-remote><h3>'+users.get(id)+'</h3><p>'+
-         '<img id="image-message" class='+nameOfFile+ ' src='+URL.createObjectURL(file)+' onclick="getPics(this)"></p></div>'; 
+            chat_area.html(chat_area.html()+'<div class=chatroom-remote><h3>'+users.get(id)+'</h3><p>'+
+            '<img id="image-message" class='+nameOfFile+ ' src='+URL.createObjectURL(file)+' onclick="getPics(this)"></p></div>')
         }
     }
     else{
 
         if (socketId == id){
-            chat_area.innerHTML += '<div class=chatroom-user>  <p>'+
+            chat_area.html(chat_area.html() +'<div class=chatroom-user>  <p>'+
             '<a href="'+url+'" download="'+nameOfFile+'">' +
-            '<img src="/assets/archive.png" id="archive-user">'+ message + '</a></p></div>';
+            '<img src="/assets/archive.png" id="archive-user">'+ message + '</a></p></div>')
         }
         else{
-            chat_area.innerHTML += '<div class=chatroom-remote><h3>'+users.get(id)+'</h3><p>'+
+            chat_area.html(chat_area.html() + '<div class=chatroom-remote><h3>'+users.get(id)+'</h3><p>'+
             '<a href="'+url+'" download="'+nameOfFile+'">' +
-            '<img src="/assets/archive.png" id="archive-remote">'+ message + '</a></p></div>';
+            '<img src="/assets/archive.png" id="archive-remote">'+ message + '</a></p></div>')
         }
     }
-    document.getElementById("chat-area").scrollTo(0, chat_area.scrollHeight);
+    chat_area.scrollTop(chat_area.prop('scrollHeight'));
 }
 

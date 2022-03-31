@@ -19,9 +19,8 @@ let user
 let socketId
 var room_userlist = new Map([])
 var mic_deaf = new Map([])
+
 // all the conected sockets
-
-
 io.on('connection', function(socket){
 
   socket.on('create-room' , room => {
