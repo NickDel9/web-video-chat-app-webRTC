@@ -4,10 +4,7 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 // const DetectRTC = require("detectrtc")
 
-
-
 app.use('/', express.static('public'))
-
 
 let roomId
 var clients = []
@@ -69,6 +66,17 @@ io.on('connection', function(socket){
 	socket.on('signal', (toId, message) => {
 		io.to(toId).emit('signal', socket.id, message);
   });
+
+  socket.on('voiceInfos' ,(toId, obj) => {
+    mic_deaf.set(toId , obj)
+  })
+
+  socket.on('get-voice-activity', (toId) =>{
+    io.to(socket.id).emit('set-voice-activity',mic_deaf.get(toId))
+   // console.log(toId,mic_deaf.get(toId))
+  })
+
+  
 
   // socket.on("message", function(room ,id ,message){
   //   var startTime1 = Date.now()

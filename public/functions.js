@@ -15,7 +15,7 @@ function joinRoom(room, user1) {
       roomId = room
       user = user1
       console.log(`room ${room}`)
-      
+      showVideoConference()
     //   var videoValue
     //   var audioValue
       
@@ -38,12 +38,49 @@ function joinRoom(room, user1) {
     //   };
         
     //   })
-      showVideoConference()
-      
-      
     }
   }
+  
 
+  function update_overlay(id){
+
+    var details = voiceInformations.get(id)
+    console.log('update overlay',details)
+
+    if (hasFullScreen){
+
+    }
+
+    const imgMic = $('<img>')
+    imgMic.attr('id' , `overlay-mic-${details.id}`)
+    imgMic.attr('src' , '/assets/mic-closed.png')
+    imgMic.attr('style' ,'padding-left : 5px;' ) 
+
+    const imgDeaf = $('<img>')
+    imgDeaf.attr('id' , `overlay-deaf-${details.id}`)
+    imgDeaf.attr('src' , '/assets/deaf_deaf.png')
+    imgDeaf.attr('style' ,'padding-left : 5px;' )   
+
+    if ($(`#overlay-mic-${details.id}`)){
+        $(`#overlay-mic-${details.id}`).remove()
+    }  
+    if ($(`#overlay-deaf-${details.id}`)){
+        $(`#overlay-deaf-${details.id}`).remove()
+    } 
+
+    if (details.mic && details.deaf){
+        $($(`#${details.id}`).children()[0]).append(imgMic)
+        $($(`#${details.id}`).children()[0]).append(imgDeaf)
+    } 
+    else if (details.mic && !details.deaf){
+        $($(`#${details.id}`).children()[0]).append(imgMic)
+    } 
+    else if (!details.mic && details.deaf){
+        $($(`#${details.id}`).children()[0]).append(imgDeaf)
+     }  
+     
+   }
+  
    function showVideoConference() {
     
     roomSelectionContainer.attr('style' , 'display: none')
@@ -68,14 +105,24 @@ function joinRoom(room, user1) {
             socketId = socket.id;
             socket.emit('join', user , roomId)
             localStream.getTracks()[0].enabled  = false // set mic muted
+            let det = {
+                "id":socketId,
+                "mic":true,
+                "deaf":false
+            } 
+            voiceInformations.set(socketId , det)
+            socket.emit('voiceInfos' , socketId , voiceInformations.get(socketId))     
+            console.log(socketId, voiceInformations.get(socketId))  
         })
         .catch(error =>{
             console.log(error)
         })
 
         // User Profile init
-    document.getElementById("Username").innerHTML = user
-    document.getElementById("room-id").innerHTML = roomId
+    $("#Username").html(user)
+    $("#room-id").html(roomId)
+
+       
     
   }
 
@@ -110,9 +157,12 @@ function UpdateMediumMenuView(id , event , dlt){
     const listitem = $('<li>')
     const video = document.createElement('video')
     const hover_div = $('<div>')
+    const logo = $('<img>')
     
     const overlayDiv = $("<div>")
-    const topText = $("<topText>")
+    const topText = $("<p>")
+
+    logo.attr('src' ,'/assets/client.png')
 
     overlayDiv.attr('id' , 'overlayDiv_mediumnav')
     topText.attr('id' , 'topText_mediumnav')
@@ -152,12 +202,14 @@ function UpdateMediumMenuView(id , event , dlt){
     video.id = 'screens'
     video.className= 'screens'
 
-    listitem.append(video)
-    listitem.append(hover_div)
+    
 
     topText.html(users.get(id))
+    overlayDiv.append(logo)
     overlayDiv.append(topText)
     listitem.append(overlayDiv)
+    listitem.append(hover_div)
+    listitem.append(video)
 
     topText.attr('style' , 'font-size : '+(6 - medium.children.length+15) + 'px') 
     
@@ -194,7 +246,7 @@ function UpdateMediumMenuView(id , event , dlt){
         setFullScreenVideo(Array.from(users.keys()) , id , false)
     })
     
-    console.log(event.stream)
+    //console.log(event.stream)
     video.srcObject = event.stream;
     video.play();
     video.autoplay = true
@@ -215,7 +267,11 @@ function setFullScreenVideo(usersIds , id , israndomised){
                 selectedId = video_div.children[0].id
                 video_div.removeChild(video_div.children[0])            
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
+                socket.emit('get-voice-activity' , usersIds[i])
+
                 UpdateMediumMenuView(selectedId , eventList.get(selectedId) ,false)
+                socket.emit('get-voice-activity' , selectedId)
+
                 console.log(`change video view bettween ${selectedId} and ${id} `)
             }
             else

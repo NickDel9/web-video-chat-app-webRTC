@@ -1,4 +1,5 @@
 
+
 var localVideo
 var isRoomCreator = false;
 var socketCount = 0;
@@ -19,6 +20,8 @@ var dataChannel
 var receiveChannel 
 let receivedBuffers = [];
 var filename
+var voiceInformations = new Map([])
+let isBlob = false
 
 
 var latency
@@ -73,8 +76,15 @@ socket.on('full-room' , () => {
 
             console.log(`user ${users.get(id)} deleted`)
             users.delete(id)
+            voiceInformations.delete(id)
+
+            
 
             channels[id].close()
+            for (i in voiceInformations.keys()){
+                console.log(voiceInformations.get(i))
+            }
+        
 
             //update server's users map
             socket.emit('delete' , id)
@@ -90,6 +100,7 @@ socket.on('full-room' , () => {
     if (hasFullScreen){
         selectedid = id
         UpdateMediumMenuView(id , eventList.get(id) , true)
+        socket.emit('get-voice-activity' , id)
         $(`#${id}`).remove()
     }
     users = new Map([])
@@ -127,13 +138,20 @@ socket.on('full-room' , () => {
                     }
                 }
                 //console.log('count' , count)
-                if (count == medium.children().length) // ama to id den iparxei sti medium nav(epidi einai se fullscreen) tote ksanatopothise to sto fullscreen mode pou itan
+                if (count == medium.children().length){ // ama to id den iparxei sti medium nav(epidi einai se fullscreen) tote ksanatopothise to sto fullscreen mode pou itan
+                    // get current voice activity from server
                     setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
+                    socket.emit('get-voice-activity' , usersIds[i])
+                }
 
             }
             else{
+                // get current voice activity from server
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
+                console.log('trigerred' , usersIds[i])
+                socket.emit('get-voice-activity' , usersIds[i])
             }
+            
         }
     }
 
@@ -141,6 +159,7 @@ socket.on('full-room' , () => {
     if (video_div.children.length == 0 && medium.children().length > 0){
         console.log('rework' , $(medium.children()[0]).attr('id'))
         setRemoteStream(eventList.get($(medium.children()[0]).attr('id')) ,$(medium.children()[0]).attr('id'))
+        socket.emit('get-voice-activity' , $(medium.children()[0]).attr('id'))
         $(medium.children()[0]).remove()
     }
 
@@ -168,6 +187,18 @@ socket.on('full-room' , () => {
 
 //     setRemoteStream(id , event)
 //  });
+
+ socket.on('set-voice-activity' , dtls =>{
+     if (dtls !== null ){
+        console.log(dtls)
+        voiceInformations.set(dtls.id , dtls)
+        for (i of voiceInformations.keys()){
+            console.log(i , voiceInformations.get(i))
+        }
+        update_overlay(dtls.id)
+     }
+    
+ })
 
  socket.on('user-joined' , function(startTime, id, usersArray){
     
@@ -203,16 +234,27 @@ socket.on('full-room' , () => {
                             const { data } = event;
                             try {
                                 console.log("typeof data", typeof data)
+                                //for FILE message 
+                                if (data instanceof Blob){
+                                    isBlob = true
+                                }
+                                
                                 if (typeof data  !== 'string') {
                                     receivedBuffers.push(data);
                                     console.log(data)
                                 } 
+                                else if (typeof data  == 'string' && receivedBuffers.length == 0 && data.slice(0,11) === '~Mic-~Deaf~'){
+                                    let str = data.slice(11, data.length);
+                                    voiceInformations.set(id , JSON.parse(str))
+                                    update_overlay(id)
+                                    return
+                                }
                                 //for simple text message 
                                 else if(typeof data  == 'string' && receivedBuffers.length == 0){
                                     initRemoteMessage(socketListId , data)
                                     console.log(data)
+                                    return
                                 }
-                                //for FILE message 
                                 else {
                                     const arrayBuffer = receivedBuffers.reduce((acc, arrayBuffer) => {
                                         const tmp = new Uint8Array(acc.byteLength + arrayBuffer.byteLength);
@@ -244,11 +286,13 @@ socket.on('full-room' , () => {
                 console.log('fullscrenn adder' , socketListId)
                 connections[socketListId].onaddstream = function(event){
                     UpdateMediumMenuView(socketListId , event , false)
+                    socket.emit('get-voice-activity' , id)
                 }    
             }
             else{
                 connections[socketListId].onaddstream = function(event){
                     setRemoteStream(event, socketListId)
+                    socket.emit('get-voice-activity' ,socketListId)
                 }   
             }       
 
@@ -284,7 +328,6 @@ function gotMessageFromServer(fromId, message) {
                 }
             }).catch(e => console.log(e));
         }
-    
         if(signal.ice) {
             connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
         }                
@@ -298,8 +341,7 @@ function setRemoteStream(event, id) {
     
     let arr
     console.log(id)
-    eventList.set(id , event) // add the stream to a list for re-initalization if this is needed 
-    
+    eventList.set(id , event) // add the event to a list for re-initalization if this is important
 
     const new_div = document.createElement('div')
     const new_video = document.createElement("video")
@@ -316,7 +358,7 @@ function setRemoteStream(event, id) {
     overlayDiv.appendChild(topText)
 
     new_div.appendChild(overlayDiv)
-    
+
     new_div.className = users.get(id)
     
     new_div.id = id
@@ -379,14 +421,14 @@ function setRemoteStream(event, id) {
         if (children_len == 1){
             video_div_bottom.style.height = "0%"
             video_div.style.height = "70%"
+
             new_div.style.width = 'max-content'
             new_div.style.height = '97%'
             new_div.style.margin = 'auto'
             new_div.style.marginTop = '10px'
+            new_div.style.border = '6px solid #181818'   
             
-            
-            new_video.style.height = '100%'
-            new_div.style.border = '6px solid #181818'          
+            new_video.style.height = '100%'       
         }
         else{
             arr.forEach((item) =>{
@@ -394,7 +436,6 @@ function setRemoteStream(event, id) {
                 console.log('calculated width ' , item.style.width )
                 item.style.height = 'max-content';  
                 item.style.margin = 'auto'
-                
                 item.style.border = '6px solid #181818'    
             })
         }     
@@ -402,6 +443,20 @@ function setRemoteStream(event, id) {
 
     new_video.style.height = '100%'
     new_video.style.width = '100%'
+
+    // if (!voiceInformations.has(id)){
+    //     console.log(id)
+    //     let det = {
+    //         "id":id,
+    //         "mic":true,
+    //         "deaf":false
+    //     } 
+    //     voiceInformations.set(id , det)
+    //     socket.emit('voiceInfos' , id , voiceInformations.get(id))
+    //     console.log(voiceInformations.get(id))
+    //     update_overlay(id)
+    // }
+    
 }
 
 
@@ -417,7 +472,7 @@ function showParticipants() {
 
 function displayMessage(message) {
     message= message + "<br>"
-    $("#chat-area").html($("#chat_area").html() + '<div class=chatroom-user>' + '<p>'+ message + '</p></div>')
+    $("#chat-area").html($("#chat-area").html() + '<div class=chatroom-user>' + '<p>'+ message + '</p></div>')
     $("#message-input").val('')
 
     for (id in channels){
@@ -425,14 +480,14 @@ function displayMessage(message) {
             channels[id].send(message);
     }
 
-    $("#chat_area").scrollTop($("#chat_area").prop('scrollHeight'));
+    $("#chat-area").scrollTop($("#chat-area").prop('scrollHeight'));
 }
 
 function initRemoteMessage(id ,message){
     if (id != socketId)
-        $("#chat-area").html($("#hat_area").html() +'<div class=chatroom-remote>'+ '<h3>'+users.get(id)+'</h3>'+'<p>'+ message+'</p></div>')
+        $("#chat-area").html($("#chat-area").html() +'<div class=chatroom-remote>'+ '<h3>'+users.get(id)+'</h3>'+'<p>'+ message+'</p></div>')
 
-    $("#chat_area").scrollTop($("#chat_area").prop('scrollHeight'));
+    $("#chat-area").scrollTop($("#chat-area").prop('scrollHeight'));
 }
 
  function sendFile(file){
@@ -442,6 +497,7 @@ function initRemoteMessage(id ,message){
         for (id in channels){
             if (id != socketId && channels[id].readyState =='open')
             channels[id].binaryType = 'arraybuffer'; 
+            
         }
 
         file.arrayBuffer().then( async (buffer) =>{

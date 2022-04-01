@@ -284,14 +284,23 @@ body {
     position:absolute;
      z-index: 999999;
      bottom:2%;
+     display: flex;
+   }
+
+   #overlayDiv_mediumnav>img{
+    width: 14px;
+    height:15px;
+    align-self:flex-end;
+    margin-bottom: 5px;
    }
 
   #topText_mediumnav {
     color: rgb(187, 187, 187);
     word-wrap: break-word;
     align-self: center;
+    margin-bottom:0;
+    margin-left: 3px;
   }
-
 
   .hover-item{
     position: absolute;

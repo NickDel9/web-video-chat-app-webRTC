@@ -48,14 +48,40 @@
     if ($(muteButton.children()[0]).attr('src') == `/assets/mic-opened.png`){
         localStream.getTracks()[0].enabled  = false
         $(muteButton.children()[0]).attr('src' , '/assets/mic-closed.png')
+
+        //info other peers if we are on deaf mode
+        let details ={
+            "id":socketId,
+            "mic":true,
+            "deaf":false
+        }
+        voiceInformations.set(socketId,details)
+        for (id in channels){
+            if (id != socketId && channels[id].readyState =='open')
+                channels[id].send("~Mic-~Deaf~"+JSON.stringify(details));
+        }
     }
     else{
         localStream.getTracks()[0].enabled  = true
         $(muteButton.children()[0]).attr('src' , '/assets/mic-opened.png')
         $('.video').volume = 1.0
         $(deafButton.children()[0]).attr('src' , '/assets/deaf.png')
+
+        //info other peers if we are on deaf mode
+        let details ={
+            "id":socketId,
+            "mic":false,
+            "deaf":false
+        }
+        voiceInformations.set(socketId,details)
+        for (id in channels){
+            if (id != socketId && channels[id].readyState =='open')
+                channels[id].send("~Mic-~Deaf~"+JSON.stringify(details));
+        }
+
     }
     $(muteButton.children()[0]).attr('style' ,'width : 18px; height: 22px;' ) 
+    socket.emit('voiceInfos' , socketId , voiceInformations.get(socketId))
   })
 
     // BUTTON -> DEAF
@@ -65,15 +91,40 @@
             $('.video').volume = 0.0
             
             $(deafButton.children()[0]).attr('src' , '/assets/deaf_deaf.png')
-            //localStream.getTracks()[0].enabled  = false
+            localStream.getTracks()[0].enabled  = false
             $(muteButton.children()[0]).attr('src' , '/assets/mic-closed.png')
+
+            //info other peers if we are on deaf mode
+            let details ={
+                "id":socketId,
+                "mic":true,
+                "deaf":true
+            }
+            voiceInformations.set(socketId,details)
+            for (id in channels){
+                if (id != socketId && channels[id].readyState =='open')
+                    channels[id].send("~Mic-~Deaf~"+JSON.stringify(details));
+            }
+
         }
         else{
             $('.video').volume = 1.0
             $(deafButton.children()[0]).attr('src' , '/assets/deaf.png')
             
+            //info other peers if we are on deaf mode
+            let details ={
+                "id":socketId,
+                "mic":true,
+                "deaf":false
+            }
+            voiceInformations.set(socketId,details)
+            for (id in channels){
+                if (id != socketId && channels[id].readyState =='open')
+                    channels[id].send("~Mic-~Deaf~"+JSON.stringify(details));
+            }
         }
         $(deafButton.children()[0]).attr('style' ,'width : 20px; height: 22px;' ) 
+        socket.emit('voiceInfos' , socketId , voiceInformations.get(socketId))
       })
 
   // BUTTON -> EXIT
@@ -120,6 +171,7 @@ fullscreenButton.on('click', () => {
             if (eventList.has(usersIds[i]) && usersIds[i] != socketId){
                 console.log("reinit stream ",usersIds[i])
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
+                socket.emit('get-voice-activity' , usersIds[i])
             }
             
         }
@@ -149,6 +201,7 @@ fullscreenButton.on('click', () => {
             if (eventList.has(usersIds[i]) && usersIds[i] != socketId){
                 selectedId = usersIds[i]
                 setFullScreenVideo(usersIds , usersIds[i] , true)
+                socket.emit('get-voice-activity' , usersIds[i])
                 break;
             }
         }
@@ -156,6 +209,7 @@ fullscreenButton.on('click', () => {
         for (i = 0; i < usersIds.length; i++){
             if (eventList.has(usersIds[i]) && usersIds[i] != socketId && selectedId != usersIds[i]){
                 UpdateMediumMenuView(usersIds[i] , eventList.get(usersIds[i] , false))
+                socket.emit('get-voice-activity' , usersIds[i])
             }
         }
 
