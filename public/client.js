@@ -443,20 +443,6 @@ function setRemoteStream(event, id) {
 
     new_video.style.height = '100%'
     new_video.style.width = '100%'
-
-    // if (!voiceInformations.has(id)){
-    //     console.log(id)
-    //     let det = {
-    //         "id":id,
-    //         "mic":true,
-    //         "deaf":false
-    //     } 
-    //     voiceInformations.set(id , det)
-    //     socket.emit('voiceInfos' , id , voiceInformations.get(id))
-    //     console.log(voiceInformations.get(id))
-    //     update_overlay(id)
-    // }
-    
 }
 
 
@@ -471,7 +457,7 @@ function showParticipants() {
 }
 
 function displayMessage(message) {
-    message= message + "<br>"
+    message += "<br>"
     $("#chat-area").html($("#chat-area").html() + '<div class=chatroom-user>' + '<p>'+ message + '</p></div>')
     $("#message-input").val('')
 
@@ -562,4 +548,3 @@ function displayFileMessage(file ,id){
     }
     chat_area.scrollTop(chat_area.prop('scrollHeight'));
 }
-

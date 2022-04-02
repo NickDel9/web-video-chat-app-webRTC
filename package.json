@@ -14,7 +14,7 @@
   },
   "name": "js",
   "version": "1.0.0",
-  "main": "ex1.js",
+  "main": "server.js",
   "scripts": {
     "devStart": "nodemon server.js"
   },

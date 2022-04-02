@@ -73,10 +73,7 @@ io.on('connection', function(socket){
 
   socket.on('get-voice-activity', (toId) =>{
     io.to(socket.id).emit('set-voice-activity',mic_deaf.get(toId))
-   // console.log(toId,mic_deaf.get(toId))
   })
-
-  
 
   // socket.on("message", function(room ,id ,message){
   //   var startTime1 = Date.now()
@@ -153,7 +150,6 @@ function initMap(ROOMid , remove){
   console.log(dataToSend)
 }
 
-
 function initUsersList(ROOMid){
   user = new Map()
   user.set(socketId , username) // store user's attrs to map
@@ -163,15 +159,14 @@ function initUsersList(ROOMid){
   }
   else{
     var array = [user]
-    room_userlist.set(ROOMid , array)//if not , add new room and array of map obj
+    room_userlist.set(ROOMid , array)//if not , add new room and array of map's obj
   }
 
   return room_userlist;
 }
 
-
 // start the server
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8080
 server.listen(port,"localhost", () => {
   console.log(`Express server listening on port ${port} and ip localhost`)
 })

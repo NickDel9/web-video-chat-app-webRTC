@@ -186,11 +186,11 @@ body {
     border-bottom :1px solid #383838
   }
 
-  #profile img{
+  #profile-user img{
    margin-left: 10px;
   }
 
-  #profile img:hover{
+  #profile-user img:hover{
     background-color: #afafaf;
     border-radius: 20px;
     transition: ease-in-out 200ms;
@@ -229,9 +229,40 @@ body {
   #user-info > h6{
     margin-left: 12px;
     color:#969696;
-
     font-weight:500;
   }
+
+  #voice-buttons-div{
+    display: block;
+    height: max-content;
+    width: 80%;
+    margin-bottom: 0px;
+    margin-left: 15px;
+    margin-top: 200px;
+    padding: 5px;
+    border-top:1px solid #383838;
+    
+  }
+
+  #voice-buttons-div > nav{
+    display: flex;
+    margin-top: 0px;
+    width: 80%;
+    height: max-content;
+    text-align: left;
+  }
+
+  #voice-buttons-div > nav > li > img{
+    padding-right: 5px; 
+    padding-left: 5px; 
+    padding-bottom: 5px; 
+    border: 2px solid var(--menu-profile);
+    border-radius: 5px;
+    margin-bottom: 0;
+    margin-top: 0px;
+  }
+  
+
 
   
   /*#bottomside-color{
@@ -338,13 +369,15 @@ body {
     margin-right: 0;
   }
 
-  #menu > nav > li{
+  #menu > nav > li , #voice-buttons-div > nav > li{
     list-style-type: none;
     text-decoration: none;
     border-bottom: none;
     width: 100px;
     align-items: center;
     justify-content: center;
+    height: max-content;
+    padding: 4px;
   }
 
   #menu img{
@@ -486,9 +519,7 @@ body {
     justify-content:center;
     color: rgb(231, 231, 231);
 
-  }
-
-
+  } 
 
   .chatroom-remote {
     color: #dedede;
@@ -498,7 +529,7 @@ body {
   }
 
   .chatroom-remote>p{
-    border: 2px solid #565a61;
+    border: 1px solid #565a61;
     background-color: var(--aside);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -527,7 +558,6 @@ body {
 
   #mess{
     display: flex;
-
     justify-content: center;
     height: 10%;
     margin-bottom: 0;
@@ -634,7 +664,7 @@ h3{
 /* images */
 
 
-#menu img:hover{
+#menu img:hover , #voice-buttons-div > nav > li > img:hover{
   cursor: pointer;
   background-color: var(--video-div);
   border-color: var(--video-div);

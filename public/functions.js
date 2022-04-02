@@ -81,30 +81,49 @@ function joinRoom(room, user1) {
      
    }
   
-   function showVideoConference() {
+   async function showVideoConference() {
     
     roomSelectionContainer.attr('style' , 'display: none')
-    //userListInput.attr('style','display: block')
     videoChatContainer.attr('style','display: block')
     chat.attr('style','display: block')
     asidenav.attr('style','display: flex')
    
     //set local video
-    
-    //
+
+    //detect if user has connected mic & video
+    let hasMic = false
+    let hasCam = false
+    let check = ["audioinput" , "videoinput"]
+
+   await navigator.mediaDevices.enumerateDevices()
+    .then((devices) =>{      
+        devices.forEach((device) =>{
+            if (device.kind == check[0]){
+                hasMic = true
+            }
+            if (device.kind == check[1]){
+                hasCam = true
+            }
+        })
+    })
+
     var mediaConstraints = {
-        video: true,
-        audio: true,
+        video: hasCam,
+        audio: hasMic,
     };
+
+    console.log(mediaConstraints)
 
    navigator.mediaDevices.getUserMedia( mediaConstraints )
         .then( function ( stream ) {   
+            
             localStream = stream;      
             localVideoComponent.srcObject = stream 
             localVideoComponent.play()
             socketId = socket.id;
             socket.emit('join', user , roomId)
             localStream.getTracks()[0].enabled  = false // set mic muted
+
             let det = {
                 "id":socketId,
                 "mic":true,
@@ -116,14 +135,15 @@ function joinRoom(room, user1) {
         })
         .catch(error =>{
             console.log(error)
+            if (stream.getVideoTracks().length > 0){
+                console.log('nice' , stream.getAudioTracks())
+            }
         })
 
         // User Profile init
     $("#Username").html(user)
     $("#room-id").html(roomId)
 
-       
-    
   }
 
 
@@ -167,33 +187,6 @@ function UpdateMediumMenuView(id , event , dlt){
     overlayDiv.attr('id' , 'overlayDiv_mediumnav')
     topText.attr('id' , 'topText_mediumnav')
 
-    //detect if user has muted mic or deaf
-    // var mic = $(`#overlay-mic-${id}`)
-    // if (mic){
-    //     var img = $('<img>')
-    //     img.attr('src' , '/assets/mic-closed.png')
-    //     img.attr('id' , `overlay-mic-${id}-medium`)
-    //     img.attr('style' , {
-    //         width: "16px",
-    //         height: "20px",
-    //         marginLeft: "5px"
-    //     })
-    //     $(`#${id}`).children[2].appendChild(img)
-    // }
-
-    // var deaf = $(`#overlay-deaf-${id}`)
-    // if (deaf){
-    //     var img = $('<img>')
-    //     img.attr('src' , '/assets/deaf_deaf.png')
-    //     img.attr('id' , `overlay-deaf-${id}-medium`)
-    //     img.attr('style' , {
-    //         width: "16px",
-    //         height: "20px",
-    //         marginLeft: "5px"
-    //     })
-    //     $(`#${id}`).children[2].append(img)
-    // }
-
     medium.append(listitem)
 
     listitem.attr('id' , id)
@@ -201,8 +194,6 @@ function UpdateMediumMenuView(id , event , dlt){
     hover_div.attr('id' , id+"-hover")
     video.id = 'screens'
     video.className= 'screens'
-
-    
 
     topText.html(users.get(id))
     overlayDiv.append(logo)
@@ -304,12 +295,9 @@ async function shareScreen(){
                     s.replaceTrack(screenTrack)
                     screenshare.attr('style' ,'visibility : hidden' )
                 }
-                
-                console.log(s)
+                //console.log(s)
             })
             
-    
- 
             screenTrack.onended = function () {
                 senders.find(s => {
                     if (s.track.kind === 'video')
@@ -375,14 +363,12 @@ function isImage(url) {
                 li.on('click' , function(){
                     changePhotoView(bot_img.attr('id'))
                 })
-                
             }
         }
         let link = $("#link")
         let cc = $("#center-view")
         link.attr('href' , picsNames.get(filename)) 
         link.attr('download' ,`${$(cc.children()[0]).attr('class')}`) 
-
 }
 
 

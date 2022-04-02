@@ -88,12 +88,12 @@
     deafButton.on('click', () => {
         
         if ($(deafButton.children()[0]).attr('src') == `/assets/deaf.png`){
-            $('.video').volume = 0.0
-            
+           
             $(deafButton.children()[0]).attr('src' , '/assets/deaf_deaf.png')
-            localStream.getTracks()[0].enabled  = false
             $(muteButton.children()[0]).attr('src' , '/assets/mic-closed.png')
 
+            $('.video').volume = 0.0
+            localStream.getTracks()[0].enabled  = false
             //info other peers if we are on deaf mode
             let details ={
                 "id":socketId,
@@ -105,14 +105,13 @@
                 if (id != socketId && channels[id].readyState =='open')
                     channels[id].send("~Mic-~Deaf~"+JSON.stringify(details));
             }
-
         }
         else{
             $('.video').volume = 1.0
             $(deafButton.children()[0]).attr('src' , '/assets/deaf.png')
             
             //info other peers if we are on deaf mode
-            let details ={
+            let details = {
                 "id":socketId,
                 "mic":true,
                 "deaf":false
@@ -126,6 +125,20 @@
         $(deafButton.children()[0]).attr('style' ,'width : 20px; height: 22px;' ) 
         socket.emit('voiceInfos' , socketId , voiceInformations.get(socketId))
       })
+
+   // BUTTON -> camera
+   $('#camera').on('click', () => {
+       let str = $($('#camera').children()[0]).attr('src')
+        if (str == '/assets/live.png'){
+            $($('#camera').children()[0]).attr('src' , '/assets/settings.png')
+            localStream.getVideoTracks()[0].enabled  = false
+            
+        }
+        if (str == '/assets/settings.png'){
+            localStream.getVideoTracks()[0].enabled  = true
+            $($('#camera').children()[0]).attr('src' , '/assets/live.png')
+        }
+    })   
 
   // BUTTON -> EXIT
   exitButton.on('click', () => {
