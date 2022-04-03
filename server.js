@@ -166,7 +166,7 @@ function initUsersList(ROOMid){
 }
 
 // start the server
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 3000
 server.listen(port,"localhost", () => {
   console.log(`Express server listening on port ${port} and ip localhost`)
 })

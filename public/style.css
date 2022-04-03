@@ -1,5 +1,11 @@
 
+/* @font-face {
+  font-family:font;
+    src: url("/assets/Dense-Regular.otf");
+} */
+
 :root{
+  --main:#181818;
   --video-div : #2d2d2d;
   --aside : #353535;
   --menu-profile : #202020;
@@ -9,8 +15,27 @@ body {
     margin: 0;
     font-size: 25px;
     background-color: 	var(--video-div);
-    font-family: 'Agency FB', arial;
+    font-family:'Times New Roman', Times, serif;
   }
+
+  .light-mode {
+    --main : #35353500;
+    background: linear-gradient(-45deg,#091718, #181818, #091718);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+
+  @keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
   #header-highlighter{
     background-color: #158171;
@@ -25,7 +50,7 @@ body {
     margin:auto;
     margin-top: -6px;
   }
-  
+
   #menu-navigation > li{
     list-style-type: none;
     text-decoration: none;
@@ -36,36 +61,36 @@ body {
   }
 
   #menu-navigation > li:hover{
-    color: #ebebeb;
+    color: #ffffff;
     cursor: pointer;
     border-top: 1px solid #158171;
     transition: all ease-in-out 150ms;
   }
 
   #box{
-    border-top: 2px solid #158171;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-radius: 10px;
     padding: 10px;
     margin: auto;
     margin-bottom: 1px;
-    width: 30%;
+    width: 29%;
     text-align: center;
-    background-color: #3b3b3b;
+    background: linear-gradient(-45deg,#091718, #181818, #091718);
     visibility: hidden;
+    height: 400px;
   }
 
   #box>#menu-div{
     margin: auto;
-    padding-top: 20px;
+    padding-top: 40px;
     padding-bottom: 20px;
     width: 80%;
   }
 
   #box>#menu-div>label{
-    color:#158171;
+    color:#ffffff;
     float: left;
     font-size: 20px;
+    margin-top: 30px;
   }
 
   #room-input , #user-id{
@@ -77,30 +102,84 @@ body {
     width:100%;
     height: 30px;
     font-size: 18px;
+    margin-top: 10px;
   }
 
   #box>#menu-div>#connect-button{
     border-radius:6px;
-    border: 2px solid #158171;
+    border: 2px solid #00000000;
     font-size: 20px;
     padding: 11px 16px;
     min-width:30%;
     color: #fff;
     cursor: pointer;
-    background-color:	#158171
+    background-color:	#00000054;
+    margin-top: 40px;
   }
 
   #box>#menu-div>#connect-button:hover{
     background-color:	var(--video-div);
-    border-color: #158171;
+    
     font-size: 20px;
     transition: all ease-in-out 100ms;
   }
 
+  #first-view-container{
+    border-bottom:4px solid  #c4c4c4;
+    background-color: #c4c4c4;
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+
+  #logo2{
+    position: absolute;
+    margin-top: -7px;
+    margin-left: 200px;
+    width: 150px;
+    height: 90px
+  }
+
+  #logo_right{
+    margin-left: -30px;
+    margin-top: -10px;
+    width: 100px;
+    height: 70px
+  }
+
+  #logo2:hover{
+    cursor: pointer;
+  }
+
+  .header{
+    display: flex;
+    width:60%;
+    height:50px;
+    border-bottom: 5px solid #195752;
+    background-color: #195752;
+    margin-left: 240px;
+  }
+
+  .header > nav {
+    display: flex;
+    margin-left: 200px;
+    text-align: center;
+  }
+  .header > nav > li{
+    display: flex;
+    list-style-type: none;
+    border-bottom: none;
+    margin-top: 0px;
+    width: max-content;
+  }
+
+  .header > nav > li > p{
+    color: white;
+    font-size: 18px;
+  }
 
   #room-selection-container{
     text-align: center;
-    margin-top: 8%
+    margin-top: 7%;
   }
 
   label{
@@ -121,11 +200,22 @@ body {
     transform: translate(0%, 0%);
   }
 
+
+  #video-chat-container {
+    position: fixed;
+    width: 80%;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    height: 100%;
+    background-color: var(--main);
+    margin: auto;
+  }
+
   #remote-video-container{
     display: flex;
     margin: auto;
     align-items: center;
-
     width: 95%;
     height: 70%;
   }
@@ -138,7 +228,6 @@ body {
     left: 0;
     width: 100%;
     height: 28%;
-    
   }
 
   #local-video-div{
@@ -161,7 +250,7 @@ body {
     z-index: 1;
     height: 50px;
     width: 70px;
-    
+
   }
 
   #profile{
@@ -178,7 +267,7 @@ body {
     width: 80%;
     height: max-content;
     align-items: center;
-   
+
     float: left;
     margin-left: 15px;
     margin-top: 10px;
@@ -241,7 +330,7 @@ body {
     margin-top: 200px;
     padding: 5px;
     border-top:1px solid #383838;
-    
+
   }
 
   #voice-buttons-div > nav{
@@ -253,18 +342,29 @@ body {
   }
 
   #voice-buttons-div > nav > li > img{
-    padding-right: 5px; 
-    padding-left: 5px; 
-    padding-bottom: 5px; 
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
     border: 2px solid var(--menu-profile);
     border-radius: 5px;
     margin-bottom: 0;
     margin-top: 0px;
   }
-  
+
+  #voice-buttons-div > nav > li{
+    list-style-type: none;
+    text-decoration: none;
+    border-bottom: none;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
+    height: max-content;
+    padding: 4px;
+  }
 
 
-  
+
+
   /*#bottomside-color{
     background-color:#202020;
     position: absolute;
@@ -275,7 +375,7 @@ body {
     visibility:hidden;
 
      <div id ='bottomside-color'>
-  
+
       </div>
   }*/
 
@@ -340,21 +440,21 @@ body {
     z-index: 1;
     height: 100%;
     width: 100%;
-   
+
     visibility: hidden;
 
   }
 
   #remote-video {
-    height: 100%;    
+    height: 100%;
     width: 100px;
     bottom: 0px;
     left: 0px;
-  } 
+  }
 
   #menu {
     height: 18%;
-    
+
     max-width: 100%;
     background-color: var(--menu-profile);
     margin-right: auto;
@@ -365,11 +465,11 @@ body {
     display: flex;
     width: max-content;
     border-bottom: none;
-    margin-left: auto; 
+    margin-left: auto;
     margin-right: 0;
   }
 
-  #menu > nav > li , #voice-buttons-div > nav > li{
+  #menu > nav > li{
     list-style-type: none;
     text-decoration: none;
     border-bottom: none;
@@ -381,25 +481,13 @@ body {
   }
 
   #menu img{
-    padding-right: 5px; 
-    padding-left: 5px; 
-    padding-bottom: 5px; 
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
     border: 2px solid var(--menu-profile);
     border-radius: 5px;
     margin-bottom: 0;
     margin-top: 5px;
-  }
- 
-
-  #video-chat-container {
-    position: fixed;
-    width: 80%;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    height: 100%;
-    background-color: #181818;
-    margin: auto;
   }
 
   #chat ,#usersList{
@@ -414,12 +502,14 @@ body {
   }
 
   #aside-navigation{
-    position: fixed;
+    display: none;
+    position: absolute;
     top: 0px;
     right:0px;
     width: 20%;
     height: 5%;
-    
+    background-color: var(--video-div);
+    border-top: 1px solid #158171;
   }
 
   #aside-navigation>nav{
@@ -436,10 +526,10 @@ body {
     height: 95%;
     border-bottom: 1px solid #6d6d6d;
   }
-  
+
   #aside-navigation>nav img{
     width : 25px;
-    height: 25px; 
+    height: 25px;
     background-color: #35353500;
     border : 2px solid #35353500;
     border-radius: 5px;
@@ -452,7 +542,7 @@ body {
     padding-right: 5px;
     padding-left: 5px;
     transition: all ease-in-out 200ms;
-    
+
   }
 
   #chat{
@@ -460,7 +550,7 @@ body {
   }
 
   #chat-area{
-    
+
     display: block;
     overflow-y:auto;
     height:85%;
@@ -470,7 +560,7 @@ body {
     padding: 10px;
     margin: 10px 0;
     padding-top:0;
-    
+
   }
 
   /* width */
@@ -479,7 +569,7 @@ body {
 }
 
 
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #158171;
@@ -496,7 +586,7 @@ body {
     color: #dedede;
     width: 60%;
     float:right;
-   
+
   }
 
   .chatroom-user>p{
@@ -519,7 +609,7 @@ body {
     justify-content:center;
     color: rgb(231, 231, 231);
 
-  } 
+  }
 
   .chatroom-remote {
     color: #dedede;
@@ -561,7 +651,7 @@ body {
     justify-content: center;
     height: 10%;
     margin-bottom: 0;
-    
+
   }
 
   #attach-file{
@@ -569,7 +659,7 @@ body {
     cursor: pointer;
     padding: 5px;
     background-color: var(--video-div);
-    margin-top: 2px;
+    margin-top: 5px;
     border-radius: 5px;
   }
 
@@ -584,13 +674,13 @@ body {
     padding: 0.8em;
     font-size: 14px;
     color: rgba(243, 243, 243, 0.9);
-    margin-top: 0px;
+    margin-top: 3px;
  }
 
  #message-input:focus , #room-input:focus , #user-id:focus{
   outline: none !important;
   border-color: #158171;
-  
+
  }
 
  ::placeholder{
@@ -601,7 +691,7 @@ body {
   margin-left: 2px;
   border-radius: 5px;
   padding: 5px;
-  margin-top: 3px;
+  margin-top: 6px;
   border-radius: 5px;
   cursor: pointer;
   color: #158171;
@@ -611,7 +701,6 @@ body {
  #send-button:hover , #attach-file:hover{
   background-color: #3e3e3f;
   transition: all ease-in-out 200ms;
-  
  }
 
 #video-screenshare{
@@ -683,7 +772,7 @@ h3{
  position: fixed;
  right: 5px;
  margin-bottom: auto;
- 
+
 }
 
 /* video items throw screenshare mode*/
@@ -706,14 +795,14 @@ h3{
    height: max-content;
    background-color: #00000054;
  }
- 
+
  #topText {
    color: rgb(187, 187, 187);
    font-size: 20px;
    margin-top: 0;
    margin-bottom: auto;
    margin-left: 5px;
- 
+
  }
 
  #overlayDiv > img {
@@ -784,7 +873,7 @@ h3{
 #center-view > img{
   margin: auto;
   margin-top: 70px;
-  
+
   max-height: 80%;
 }
 
@@ -847,6 +936,19 @@ h3{
   border-radius: 5px;
   background-color: var(--aside);
   cursor: pointer;
+}
+
+#profile-extra{
+  display: flex;
+  text-align: center;
+  color: rgb(151, 151, 151);
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 40px;
+}
+
+#profile-extra:hover{
+  text-decoration: underline;
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.50) {

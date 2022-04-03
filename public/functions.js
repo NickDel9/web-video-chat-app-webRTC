@@ -1,9 +1,6 @@
 
 // FUNCTIONS ==================================================================
 
-
-
-
 function joinRoom(room, user1) {
     if (room === '' && user === '' ) {
       alert('Please type a room ID and a user ID')
@@ -16,28 +13,6 @@ function joinRoom(room, user1) {
       user = user1
       console.log(`room ${room}`)
       showVideoConference()
-    //   var videoValue
-    //   var audioValue
-      
-  
-    //     await navigator.mediaDevices.getUserMedia( {
-    //       video: true,
-    //       audio: true,
-    //   } )
-    //   .then(function ( stream ){
-    //       console.log(DetectRTC.hasWebcam  +" "+DetectRTC.hasMicrophone)
-    //       if (!DetectRTC.hasWebcam)
-    //           videoValue = false     
-          
-    //       if (!DetectRTC.hasMicrophone)
-    //           audioValue = false        
-  
-    //       mediaConstraints = {
-    //           video: videoValue,
-    //           audio: audioValue,
-    //   };
-        
-    //   })
     }
   }
   
@@ -114,7 +89,7 @@ function joinRoom(room, user1) {
 
     console.log(mediaConstraints)
 
-   navigator.mediaDevices.getUserMedia( mediaConstraints )
+    await navigator.mediaDevices.getUserMedia( mediaConstraints )
         .then( function ( stream ) {   
             
             localStream = stream;      
@@ -135,14 +110,14 @@ function joinRoom(room, user1) {
         })
         .catch(error =>{
             console.log(error)
-            if (stream.getVideoTracks().length > 0){
-                console.log('nice' , stream.getAudioTracks())
-            }
         })
 
         // User Profile init
     $("#Username").html(user)
     $("#room-id").html(roomId)
+
+    $('#aside-navigation').attr('style' , 'display:flex')
+    $('#header-img').attr('style' , 'display:none')
 
   }
 
@@ -152,6 +127,7 @@ function changeItem(new_item , old_item){
     new_item.attr('style' ,'border-top : 1px solid #158171')
     new_item.attr('style' ,'border-bottom : 1px solid #ffffff')
     new_item.attr('style' ,'color : #ffffff')
+   
 
     old_item.attr('style' ,'border-style:none')
     old_item.attr('style' ,'color:#158171')   
@@ -424,4 +400,15 @@ function storeImg(file , url){
     pics.set(new File([file] , filename), url)
     picsNames.set(filename, url)    
     
+}
+
+function changeColorMode(){
+    if ($('#profile-extra').html() == 'Switch to standard background'){
+        $('#profile-extra').html('Switch to dynamic background')
+    }
+    else
+    $('#profile-extra').html('Switch to standard background')
+
+    $('.header-img').attr('style' , 'display:none')
+    document.body.classList.toggle("light-mode");
 }

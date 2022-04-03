@@ -129,20 +129,21 @@
    // BUTTON -> camera
    $('#camera').on('click', () => {
        let str = $($('#camera').children()[0]).attr('src')
-        if (str == '/assets/live.png'){
-            $($('#camera').children()[0]).attr('src' , '/assets/settings.png')
+        if (str == '/assets/camera.png'){
+            $($('#camera').children()[0]).attr('src' , '/assets/no_camera.png')
             localStream.getVideoTracks()[0].enabled  = false
-            
+            $($('#camera').children()[0]).attr('title' ,'Enable camera')
         }
-        if (str == '/assets/settings.png'){
+        if (str == '/assets/no_camera.png'){
             localStream.getVideoTracks()[0].enabled  = true
-            $($('#camera').children()[0]).attr('src' , '/assets/live.png')
+            $($('#camera').children()[0]).attr('src' , '/assets/camera.png')
+            $($('#camera').children()[0]).attr('title' ,'Disable camera')
         }
     })   
 
   // BUTTON -> EXIT
   exitButton.on('click', () => {
-      console.log(`socket.id = ${socket.id}`)
+      //console.log(`socket.id = ${socket.id}`)
       if (users.size == 1){ // if user is the only client in the room
         socket.emit("destroy-room")
       }
@@ -156,7 +157,6 @@
 fullscreenButton.on('click', () => {
 
     let usersIds = Array.from( users.keys() );
-
     if (usersIds.length < 3)
         return;
 
@@ -290,10 +290,12 @@ selected_file.on('change', e =>{
             $($("#bottomList").children()[0]).remove()
    })
 
-
 // profile pic button 
-
 $("#profile-user:first-child").on("click" ,function(){
     console.log('nikos')
+    if ($('#profile-extra').css('display') == 'none')
+        $('#profile-extra').attr('style' , 'display:block')
+    else
+        $('#profile-extra').attr('style' , 'display:none')
     
 })

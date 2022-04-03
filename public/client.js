@@ -404,7 +404,7 @@ function setRemoteStream(event, id) {
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
            //i.style.marginTop = '15px' // metakini pio panw tin prwti 5ada
-            i.style.border = '6px solid #181818'      
+            i.style.border = '6px solid var(--main)'      
         }
         for (i of children_bottom){ // kataskevi tis defteris 5adas
                 
@@ -413,7 +413,7 @@ function setRemoteStream(event, id) {
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
           //  i.style.marginTop= '15px'
-            i.style.border = '6px solid #181818'  
+            i.style.border = '6px solid var(--main)'  
         }
     }
     else if (children_len<4){
@@ -426,7 +426,7 @@ function setRemoteStream(event, id) {
             new_div.style.height = '97%'
             new_div.style.margin = 'auto'
             new_div.style.marginTop = '10px'
-            new_div.style.border = '6px solid #181818'   
+            new_div.style.border = '6px solid var(--main)'   
             
             new_video.style.height = '100%'       
         }
@@ -436,7 +436,7 @@ function setRemoteStream(event, id) {
                 console.log('calculated width ' , item.style.width )
                 item.style.height = 'max-content';  
                 item.style.margin = 'auto'
-                item.style.border = '6px solid #181818'    
+                item.style.border = '6px solid var(--main)'    
             })
         }     
     }  

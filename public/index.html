@@ -8,7 +8,18 @@
   </head>
 
 <body >
-  <div id="header-highlighter"></div>
+  
+  <div id="first-view-container">
+    <div class="header-img" style="display:flex">
+      <img id='logo2' src = "assets/logo2a.png" alt="logo" id="logo">
+      <div class="header">
+        <nav>
+          <li><p>Fast , Secure & Easy to use. Create or Join a room & enjoy RTC!  </p></li>
+          <li><p>Room's size: 7 users.</p></li>
+        </nav>
+      </div>
+     
+    </div>
   <div id="room-selection-container" class="centered">
     <img src = "assets/logo.png" alt="logo" id="logo">
      <nav id="menu-navigation">
@@ -21,20 +32,21 @@
         <input id="room-input" type="text" /><br><br>
         <label>Username</label> <br>
         <input id="user-id" type="text" /><br><br><br>
-        <button type="submit" id="connect-button" style = "font-family: 'Agency FB', arial">CONNECT</button>
+        <button type="submit" id="connect-button" >CONNECT</button>
       </div>
     </div>
-    
+
   </div>
+</div>
 
   <div id="fullpage">
     <img id="exit-img" src="assets/exit-img.png">
-    
+
     <a id="link"><img id="download-img" src="assets/download.png">
     </a>
 
     <div id="center-view">
-      
+
     </div>
     <div id="bottomList-view">
       <ul id="bottomList">
@@ -46,10 +58,10 @@
   <div id="video-chat-container" class="video-position" style="display: none">
     <div id="header-highlighter"></div>
     <div id="remote-video-container">
-       
+
     </div>
     <div id="remote-video-container2">
-       
+
     </div>
 
     <section id="bottom-section">
@@ -57,16 +69,19 @@
       <div id="local-video-div">
         <video id="local-video" autoplay="autoplay" muted="muted"></video>
       </div>
-
       <div id = 'profile'>
         <div id="profile-user">
           <img src = "/assets/user.png" style="width : 30x; height: 35px;">
           <h4 id="Username">USERNAME</h4>
+
         </div>
+
+
+
         <div id="user-info">
           <h5>Room ID</h5>
           <h6 id="room-id"></h6>
-  
+
           <h5>Latency</h5>
           <h6 id="latency"></h6>
         </div>
@@ -76,35 +91,36 @@
               height: 23px;" alt="logo"/></li>
             <li title="Deaf/UnDeaf" id="deaf"><img  src="/assets/deaf.png" style="width : 20px;
               height: 22px; "alt="logo"/></li>
-            <li title="Disable camera" id="camera"><img  src="/assets/live.png" style="width : 20px;
-              height: 22px; "alt="logo"/></li>        
+            <li title="Disable camera" id="camera"><img  src="/assets/camera.png" style="width : 27px;
+              height: 22px; "alt="logo"/></li>
           </nav>
         </div>
         <!-- <img  src="/assets/settings.png" style="width : 22px;
         height: 22px; "alt="logo"/> -->
       </div>
 
-      <div id="settings" style="display: none;">
 
-      </div>
 
       <div id="nav-and-menu">
-        <nav id="medium-view"></nav> 
+        <nav id="medium-view"></nav>
         <div id="menu">
           <nav>
+            <p id="profile-extra" onclick="changeColorMode()">
+              Switch to dynamic background
+            </p>
             <li title="Disconnect" id="exit"><img src="/assets/exit.png" style="width : 15x;
               height: 21px; " alt="logo"/></li>
               <li title="Share screen" id="screenshare"><img src="/assets/screen-capture.png" style="width : 20px;
-                height: 22px; " alt="logo"/></li>  
+                height: 22px; " alt="logo"/></li>
               <li title="Fullscreen" id="fullscreen"><img src="/assets/fullscreen.png" style="width : 20px;
-              height: 22px; " alt="logo"/></li>  
+              height: 22px; " alt="logo"/></li>
           </nav>
         </div>
-      
+
       </div>
- 
+
   </section>
-    
+
   </div>
 
   <div id="aside-navigation">
@@ -118,7 +134,7 @@
     <h3 >Participants</h3>
     <ul id="participants"></ul>
   </div>
-  
+
   <div id="chat" style="display:none">
     <h3 >Chat</h3>
       <div id = "chat-area">
@@ -132,7 +148,7 @@
         <img src = "assets/send.png" style="width : 25px;
         height: 25px;" alt="logo" id="send-button">
       </div>
-      
+
   </div>
 
   <script>
@@ -161,6 +177,6 @@
   <script type="text/javascript" src="functions.js"></script>
   <script type="text/javascript" src="client.js"></script>
   <script type="text/javascript" src="buttons.js"></script>
-  
+
 </body>
 </html>
