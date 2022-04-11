@@ -78,14 +78,11 @@ socket.on('full-room' , () => {
             users.delete(id)
             voiceInformations.delete(id)
 
-            
-
             channels[id].close()
             for (i in voiceInformations.keys()){
                 console.log(voiceInformations.get(i))
             }
         
-
             //update server's users map
             socket.emit('delete' , id)
 
@@ -137,7 +134,6 @@ socket.on('full-room' , () => {
                         count++
                     }
                 }
-                //console.log('count' , count)
                 if (count == medium.children().length){ // ama to id den iparxei sti medium nav(epidi einai se fullscreen) tote ksanatopothise to sto fullscreen mode pou itan
                     // get current voice activity from server
                     setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
@@ -176,17 +172,6 @@ socket.on('full-room' , () => {
     }
 
  })
-
-//  socket.on('change-stream', function(id ,event ,startTime){
-
-//     calculateDelay(startTime)
-//     console.log(document.getElementById(id))
-//     document.getElementById(id).remove();
-
-//     console.log(document.getElementById(id))
-
-//     setRemoteStream(id , event)
-//  });
 
  socket.on('set-voice-activity' , dtls =>{
      if (dtls !== null ){
@@ -277,6 +262,7 @@ socket.on('full-room' , () => {
              connections[socketListId].onicecandidate = function(event){
                 if(event.candidate != null) {
                     console.log('---sending ice candidate---');
+                    //console.log(event.candidate)
                     socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate}));
                 }
             }   
@@ -306,20 +292,22 @@ socket.on('full-room' , () => {
          connections[id].createOffer().then(function(description){
              connections[id].setLocalDescription(description).then(function() {
                  console.log(`new user !  id: ${id}`)
+                 console.log(connections[id].localDescription)
                  socket.emit('signal', id, JSON.stringify({'sdp': connections[id].localDescription}));
              }).catch(e => console.log(e));        
          });
      }
  })    
 
-function gotMessageFromServer(fromId, message) {
+function gotMessageFromServer(fromId, message){
 
     var signal = JSON.parse(message)
 
-    if(fromId != socketId) {
+    if(fromId != socketId){
         if(signal.sdp){      
             connections[fromId].setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(function() {                
                 if(signal.sdp.type == 'offer') {
+                    
                     connections[fromId].createAnswer().then(function(description){
                         connections[fromId].setLocalDescription(description).then(function() {
                             socket.emit('signal', fromId, JSON.stringify({'sdp': connections[fromId].localDescription}));
@@ -329,6 +317,7 @@ function gotMessageFromServer(fromId, message) {
             }).catch(e => console.log(e));
         }
         if(signal.ice) {
+            console.log(signal.ice);
             connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
         }                
     }
@@ -403,16 +392,14 @@ function setRemoteStream(event, id) {
             console.log('calculated width ' , i.style.width )
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
-           //i.style.marginTop = '15px' // metakini pio panw tin prwti 5ada
             i.style.border = '6px solid var(--main)'      
         }
-        for (i of children_bottom){ // kataskevi tis defteris 5adas
+        for (i of children_bottom){ // make the second row
                 
             i.style.width = 100 / (4) +'%';
             console.log('calculated width' , i.style.width)
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
-          //  i.style.marginTop= '15px'
             i.style.border = '6px solid var(--main)'  
         }
     }
@@ -478,12 +465,9 @@ function initRemoteMessage(id ,message){
 
  function sendFile(file){
     if (file) {
-       // console.log(`user ${socketId} is sending a file with ${file.size} size! with id : ${dataChannel.id}`)
-
         for (id in channels){
             if (id != socketId && channels[id].readyState =='open')
-            channels[id].binaryType = 'arraybuffer'; 
-            
+            channels[id].binaryType = 'arraybuffer';  
         }
 
         file.arrayBuffer().then( async (buffer) =>{

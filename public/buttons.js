@@ -64,7 +64,7 @@
     else{
         localStream.getTracks()[0].enabled  = true
         $(muteButton.children()[0]).attr('src' , '/assets/mic-opened.png')
-        $('.video').volume = 1.0
+        $('video').prop('volume', '1.0');
         $(deafButton.children()[0]).attr('src' , '/assets/deaf.png')
 
         //info other peers if we are on deaf mode
@@ -92,7 +92,7 @@
             $(deafButton.children()[0]).attr('src' , '/assets/deaf_deaf.png')
             $(muteButton.children()[0]).attr('src' , '/assets/mic-closed.png')
 
-            $('.video').volume = 0.0
+            $('video').prop('volume', '0.0');
             localStream.getTracks()[0].enabled  = false
             //info other peers if we are on deaf mode
             let details ={
@@ -107,7 +107,7 @@
             }
         }
         else{
-            $('.video').volume = 1.0
+            $('video').prop('volume', '1.0');
             $(deafButton.children()[0]).attr('src' , '/assets/deaf.png')
             
             //info other peers if we are on deaf mode
@@ -280,15 +280,15 @@ selected_file.on('change', e =>{
 
 // // BUTTON -> EXIT PHOTO VIEW (JPG | PNG)
 
-     $("#exit-img").on("click" , () =>{
+$("#exit-img").on("click" , () =>{
          
-        $("#fullpage").attr('style' , 'display:none')
+    $("#fullpage").attr('style' , 'display:none')
 
-        $($("#center-view").children()[0]).remove()
+    $($("#center-view").children()[0]).remove()
 
-        while ($("#bottomList").children().length > 0)
-            $($("#bottomList").children()[0]).remove()
-   })
+    while ($("#bottomList").children().length > 0)
+        $($("#bottomList").children()[0]).remove()
+})  
 
 // profile pic button 
 $("#profile-user:first-child").on("click" ,function(){

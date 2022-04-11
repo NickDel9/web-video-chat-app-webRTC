@@ -75,16 +75,6 @@ io.on('connection', function(socket){
     io.to(socket.id).emit('set-voice-activity',mic_deaf.get(toId))
   })
 
-  // socket.on("message", function(room ,id ,message){
-  //   var startTime1 = Date.now()
-  //   io.to(room).emit("broadcast-message", id ,message ,startTime1);
-  // })
-
-  // socket.on("change-stream", function(room ,id ,event){
-  //   var startTime1 = Date.now()
-  //   io.to(room).emit("change-stream", id ,event ,startTime1);
-  // })
-
 	socket.on('disconnect', function() {
     var startTime2 = Date.now()
 		io.sockets.emit("user-left", socket.id , startTime2);
@@ -168,5 +158,5 @@ function initUsersList(ROOMid){
 // start the server
 const port = process.env.PORT || 3000
 server.listen(port,"localhost", () => {
-  console.log(`Express server listening on port ${port} and ip localhost`)
+  console.log(`Express signaling server listening on port ${port} and ip localhost`)
 })
