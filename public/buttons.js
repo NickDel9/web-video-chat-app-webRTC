@@ -177,12 +177,12 @@ fullscreenButton.on('click', () => {
         }
 
         for (i = 0; i < usersIds.length; i++){
-            console.log(eventList.get(usersIds[i]))
+         //   console.log(eventList.get(usersIds[i]))
         }
         
         for (var i = 0; i < usersIds.length; i++){
             if (eventList.has(usersIds[i]) && usersIds[i] != socketId){
-                console.log("reinit stream ",usersIds[i])
+                //console.log("reinit stream ",usersIds[i])
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
                 socket.emit('get-voice-activity' , usersIds[i])
             }
@@ -292,7 +292,6 @@ $("#exit-img").on("click" , () =>{
 
 // profile pic button 
 $("#profile-user:first-child").on("click" ,function(){
-    console.log('nikos')
     if ($('#profile-extra').css('display') == 'none')
         $('#profile-extra').attr('style' , 'display:block')
     else

@@ -74,13 +74,13 @@ socket.on('full-room' , () => {
     if (users){
         if (users.has(id)){
 
-            console.log(`user ${users.get(id)} deleted`)
+            // console.log(`user ${users.get(id)} deleted`)
             users.delete(id)
             voiceInformations.delete(id)
 
             channels[id].close()
             for (i in voiceInformations.keys()){
-                console.log(voiceInformations.get(i))
+                // console.log(voiceInformations.get(i))
             }
         
             //update server's users map
@@ -109,7 +109,7 @@ socket.on('full-room' , () => {
         users.set(key , value)
     }
 
-    console.log("refactor",users)
+    // console.log("refactor",users)
     let usersIds = Array.from( users.keys() );
 
     while (video_div.children[0]) {
@@ -120,7 +120,7 @@ socket.on('full-room' , () => {
         video_div_bottom.removeChild(video_div_bottom.children[0]);
     }
 
-    console.log(medium.children().length)
+    // console.log(medium.children().length)
    
     usersIds = Array.from( users.keys() );
     for (var i = 0; i < usersIds.length; i++){
@@ -130,7 +130,7 @@ socket.on('full-room' , () => {
                 var count=0
                 for (var j=0; j<medium.children().length; j++){
                     if ($(medium.children()[j]).attr('id') != usersIds[i]){
-                        console.log("reinit stream",$(medium.children()[j]).attr('id'))
+                        // console.log("reinit stream",$(medium.children()[j]).attr('id'))
                         count++
                     }
                 }
@@ -144,7 +144,7 @@ socket.on('full-room' , () => {
             else{
                 // get current voice activity from server
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
-                console.log('trigerred' , usersIds[i])
+                // console.log('trigerred' , usersIds[i])
                 socket.emit('get-voice-activity' , usersIds[i])
             }
             
@@ -153,7 +153,7 @@ socket.on('full-room' , () => {
 
     // an diagrafitke video pou itan fullscreen tote pare to 1o video apto medium nav kai valto se fullscreen  
     if (video_div.children.length == 0 && medium.children().length > 0){
-        console.log('rework' , $(medium.children()[0]).attr('id'))
+        // console.log('rework' , $(medium.children()[0]).attr('id'))
         setRemoteStream(eventList.get($(medium.children()[0]).attr('id')) ,$(medium.children()[0]).attr('id'))
         socket.emit('get-voice-activity' , $(medium.children()[0]).attr('id'))
         $(medium.children()[0]).remove()
@@ -175,10 +175,10 @@ socket.on('full-room' , () => {
 
  socket.on('set-voice-activity' , dtls =>{
      if (dtls !== null ){
-        console.log(dtls)
+        // console.log(dtls)
         voiceInformations.set(dtls.id , dtls)
         for (i of voiceInformations.keys()){
-            console.log(i , voiceInformations.get(i))
+            // console.log(i , voiceInformations.get(i))
         }
         update_overlay(dtls.id)
      }
@@ -196,7 +196,7 @@ socket.on('full-room' , () => {
         const [value] = us.values()
         users.set(key , value)
     }
-    console.log(users)
+    // console.log(users)
     let clients = Array.from( users.keys() );
     //clients : id of users
     clients.forEach(function(socketListId) {
@@ -209,7 +209,7 @@ socket.on('full-room' , () => {
                     channels[socketListId] = dataChannel //store datachannel to array for future send event
 
                     dataChannel.addEventListener('open', () => {
-                        console.log('datachannel created' +" " + dataChannel.readyState +" sid" +socketListId)
+                        // console.log('datachannel created' +" " + dataChannel.readyState +" sid" +socketListId)
                     });
                 
                     //remake file from chunks sent from datachannel
@@ -218,7 +218,7 @@ socket.on('full-room' , () => {
                         dataChannel.binaryType = 'arraybuffer';
                             const { data } = event;
                             try {
-                                console.log("typeof data", typeof data)
+                                // console.log("typeof data", typeof data)
                                 //for FILE message 
                                 if (data instanceof Blob){
                                     isBlob = true
@@ -226,7 +226,7 @@ socket.on('full-room' , () => {
                                 
                                 if (typeof data  !== 'string') {
                                     receivedBuffers.push(data);
-                                    console.log(data)
+                                   // console.log(data)
                                 } 
                                 else if (typeof data  == 'string' && receivedBuffers.length == 0 && data.slice(0,11) === '~Mic-~Deaf~'){
                                     let str = data.slice(11, data.length);
@@ -237,7 +237,7 @@ socket.on('full-room' , () => {
                                 //for simple text message 
                                 else if(typeof data  == 'string' && receivedBuffers.length == 0){
                                     initRemoteMessage(socketListId , data)
-                                    console.log(data)
+                                  //  console.log(data)
                                     return
                                 }
                                 else {
@@ -253,7 +253,7 @@ socket.on('full-room' , () => {
                                     displayFileMessage(blob , socketListId)
                                 }
                             } catch (err) {
-                                console.log('Message transfer failed');
+                                //console.log('Message transfer failed');
                             }
                         });
                 }
@@ -261,7 +261,7 @@ socket.on('full-room' , () => {
              //Wait for their ice candidate       
              connections[socketListId].onicecandidate = function(event){
                 if(event.candidate != null) {
-                    console.log('---sending ice candidate---');
+                   // console.log('---sending ice candidate---');
                     //console.log(event.candidate)
                     socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate}));
                 }
@@ -269,7 +269,7 @@ socket.on('full-room' , () => {
 
             // if fullscreen mode is enabled add the new stream to the bottom side menu
             if (hasFullScreen){
-                console.log('fullscrenn adder' , socketListId)
+               // console.log('fullscrenn adder' , socketListId)
                 connections[socketListId].onaddstream = function(event){
                     UpdateMediumMenuView(socketListId , event , false)
                     socket.emit('get-voice-activity' , id)
@@ -291,8 +291,8 @@ socket.on('full-room' , () => {
      if(users.size >= 2){
          connections[id].createOffer().then(function(description){
              connections[id].setLocalDescription(description).then(function() {
-                 console.log(`new user !  id: ${id}`)
-                 console.log(connections[id].localDescription)
+                 //console.log(`new user !  id: ${id}`)
+                 //console.log(connections[id].localDescription)
                  socket.emit('signal', id, JSON.stringify({'sdp': connections[id].localDescription}));
              }).catch(e => console.log(e));        
          });
@@ -317,7 +317,7 @@ function gotMessageFromServer(fromId, message){
             }).catch(e => console.log(e));
         }
         if(signal.ice) {
-            console.log(signal.ice);
+            //console.log(signal.ice);
             connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
         }                
     }
@@ -329,7 +329,7 @@ function setRemoteStream(event, id) {
     let children_bottom
     
     let arr
-    console.log(id)
+    //console.log(id)
     eventList.set(id , event) // add the event to a list for re-initalization if this is important
 
     const new_div = document.createElement('div')
@@ -377,7 +377,7 @@ function setRemoteStream(event, id) {
         children_len += children_bottom.length
     }
 
-    console.log('children ' , children_len )
+   // console.log('children ' , children_len )
 
     if (children_len  >= 4){
         video_div.style.height = "35%"
@@ -389,7 +389,7 @@ function setRemoteStream(event, id) {
         for (i of children){
             
             i.style.width = 100 / 4 +'%';
-            console.log('calculated width ' , i.style.width )
+          //  console.log('calculated width ' , i.style.width )
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
             i.style.border = '6px solid var(--main)'      
@@ -397,7 +397,7 @@ function setRemoteStream(event, id) {
         for (i of children_bottom){ // make the second row
                 
             i.style.width = 100 / (4) +'%';
-            console.log('calculated width' , i.style.width)
+           // console.log('calculated width' , i.style.width)
             i.style.height = 'max-content';  
             i.style.margin = 'auto'
             i.style.border = '6px solid var(--main)'  
@@ -420,7 +420,7 @@ function setRemoteStream(event, id) {
         else{
             arr.forEach((item) =>{
                 item.style.width = 100 / children_len +'%';
-                console.log('calculated width ' , item.style.width )
+            //    console.log('calculated width ' , item.style.width )
                 item.style.height = 'max-content';  
                 item.style.margin = 'auto'
                 item.style.border = '6px solid var(--main)'    
@@ -471,8 +471,8 @@ function initRemoteMessage(id ,message){
         }
 
         file.arrayBuffer().then( async (buffer) =>{
-                console.log('send file')
-                console.log('id' , socketId)
+               // console.log('send file')
+              //  console.log('id' , socketId)
                 buffer = await file.arrayBuffer();
                 for (let i = 0; i < buffer.byteLength; i += MAXIMUM_CHUNKFILE_SIZE) {
                     for (id in channels){

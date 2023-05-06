@@ -11,7 +11,7 @@ function joinRoom(room, user1) {
     } else {
       roomId = room
       user = user1
-      console.log(`room ${room}`)
+     // console.log(`room ${room}`)
       showVideoConference()
     }
   }
@@ -20,7 +20,7 @@ function joinRoom(room, user1) {
   function update_overlay(id){
 
     var details = voiceInformations.get(id)
-    console.log('update overlay',details)
+   // console.log('update overlay',details)
 
     if (hasFullScreen){
 
@@ -87,7 +87,7 @@ function joinRoom(room, user1) {
         audio: hasMic,
     };
 
-    console.log(mediaConstraints)
+    //console.log(mediaConstraints)
 
     await navigator.mediaDevices.getUserMedia( mediaConstraints )
         .then( function ( stream ) {   
@@ -106,10 +106,10 @@ function joinRoom(room, user1) {
             } 
             voiceInformations.set(socketId , det)
             socket.emit('voiceInfos' , socketId , voiceInformations.get(socketId))     
-            console.log(socketId, voiceInformations.get(socketId))  
+           // console.log(socketId, voiceInformations.get(socketId))  
         })
         .catch(error =>{
-            console.log(error)
+          //  console.log(error)
         })
 
         // User Profile init
@@ -239,7 +239,7 @@ function setFullScreenVideo(usersIds , id , israndomised){
                 UpdateMediumMenuView(selectedId , eventList.get(selectedId) ,false)
                 socket.emit('get-voice-activity' , selectedId)
 
-                console.log(`change video view bettween ${selectedId} and ${id} `)
+            //    console.log(`change video view bettween ${selectedId} and ${id} `)
             }
             else
                 setRemoteStream(eventList.get(usersIds[i]) , usersIds[i])
@@ -304,7 +304,7 @@ function isImage(url) {
         for (let i = 0; i < tpics.length; i++){
             //console.log(`tpics[i].name ${tpics[i].name}`)
             if (filename == tpics[i].name){
-                console.log(tpics[i].name)
+               // console.log(tpics[i].name)
                 file = tpics[i]
                 break;
             }
@@ -325,8 +325,8 @@ function isImage(url) {
         let list = $("#bottomList")
 
         for (let i = 0; i < tpics.length; i++){
-            console.log(`pic ${tpics[i]}`)
-            console.log(`file ${file}`)
+            //console.log(`pic ${tpics[i]}`)
+           // console.log(`file ${file}`)
             if (filename != tpics[i].name){
                 let li = $('<li>')
                 let bot_img = $('<img>')
@@ -353,7 +353,7 @@ function changePhotoView(id){
     const center = $("#center-view")
     const bottom = $("#bottomList")
     const center_image_elem = center.children()[0]
-    console.log('center' , center_image_elem.className)
+   // console.log('center' , center_image_elem.className)
    // const bottom_image_elem = $(`#${id}`)
     const center_img_blob = picsNames.get(center_image_elem.className)
     const bottom_img_blob = picsNames.get(id)
